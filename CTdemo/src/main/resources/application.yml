@@ -1,0 +1,13 @@
+commercetools:
+  projectKey: practiceproject-2023
+  clientId: xUH4sYQlQmemYo6IYtdMEITh
+  clientSecret: 0aTql8m1CppFTXz1dMSKXjYkNnsFuA7o
+  serviceRegion: GCP_AUSTRALIA_SOUTHEAST1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html

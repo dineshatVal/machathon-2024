@@ -1,0 +1,38 @@
+package com.example.ctdemo.controller;
+
+import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.order.Order;
+import com.example.ctdemo.service.CartService;
+import com.example.ctdemo.service.OrderService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+@RestController
+@RequestMapping("/orders")
+public class OrdersController {
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private OrderService orderService;
+
+    @PostMapping("/placeorder")
+    public CompletableFuture<CompletableFuture<?>> makeOrder(@RequestParam String name) throws JsonProcessingException {
+        CompletableFuture<Optional<Cart>> cartForUser = cartService.getCartForUser(name);
+        return cartForUser.thenApply(c -> {
+            if (c.isPresent()) {
+                return orderService.placeorder(c.get());
+            }
+            return CompletableFuture.completedFuture(null);
+        });
+    }
+
+    @GetMapping("/getOrders")
+    public CompletableFuture<List<Order>> getAllOrders(@RequestParam String fname) throws JsonProcessingException {
+        return orderService.getAllOrders(fname);
+    }
+}
