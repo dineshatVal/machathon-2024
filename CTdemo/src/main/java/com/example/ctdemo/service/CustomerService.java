@@ -57,12 +57,10 @@ public class CustomerService {
         ApiHttpResponse<JsonNode> jsonNodeApiHttpResponse = byProjectKeyRequestBuilder.graphql().post(gqlRequest).executeBlocking(JsonNode.class);
         //return jsonNodeApiHttpResponse.getBody().get("data").get("customers").get("results");
         return jsonNodeApiHttpResponse.getBody().at("/data/customers/results");
-        //return byProjectKeyRequestBuilder.graphql().post(gqlRequest).execute().thenApply(ApiHttpResponse::getBody);
     }
 
 
     public CompletableFuture<Customer> updateCustomerNationality(String name, String nationality) throws JsonProcessingException {
-        //JsonNode jsonNode = queryCustFNameGql(name);
         JsonNode jsonNode = queryCustFNameGql(name);//.get("data").get("customers").get("results");
         if (jsonNode.size() > 0) {
             CustomerResult customerResult = objectMapper.treeToValue(jsonNode.get(0), CustomerResult.class);
@@ -73,12 +71,7 @@ public class CustomerService {
                         .type(TypeResourceIdentifierBuilder.of().key("type-customer").build())
                         .fields(FieldContainerBuilder.of().addValue("nationality", nationality).build())
                         .build();
-                // CustomerSetCustomFieldAction customerSetCustomFieldAction  = CustomerSetCustomFieldActionBuilder.of().name("nationality").value(nationality).build();
-                /*CustomerSetCustomFieldAction customerSetCustomFieldAction = CustomerUpdateActionBuilder.of()
-                        .setCustomFieldBuilder()
-                        .name("nationality")
-                        .value(nationality)
-                        .build();*/
+
                 CustomerUpdate customerUpdate = CustomerUpdateBuilder.of()
                         .version(c.getVersion())
                         .actions(customerSetTypeAction).build();
@@ -119,38 +112,6 @@ public class CustomerService {
                                 .actions(customerAddAddressAction).build())
                         .executeBlocking().getBody();
 
-                /*CustomerAddAddressAction customerAddAddressAction1 = CustomerAddAddressActionBuilder.of()
-                        .address(BaseAddressBuilder.of()
-                                .city(customerAddress.getCity())
-                                .apartment(customerAddress.getBuilding())
-                                .country(customerAddress.getCountry())
-                                .build())
-                        .build();
-
-                customerUpdateActionList.add(customerAddAddressAction);
-                *//*customerUpdateActionList.add(CustomerSetAddressCustomTypeActionBuilder.of()
-                        .type(TypeResourceIdentifierBuilder.of().key("type-customer-address").build())
-                        .fields(FieldContainerBuilder.of().addValue("floor",customerAddress.getFloor()).addValue("door",customerAddress.getDoor()).build())
-                        .build());*//*
-
-                CustomerUpdate customerUpdate = CustomerUpdateBuilder.of()
-                        .version(c.getVersion())
-                        .actions(customerAddAddressAction).build();
-                Customer customer = byProjectKeyRequestBuilder.customers()
-                        .withId(id)
-                        .post(customerUpdate)
-                        .executeBlocking().getBody();
-                CustomerSetAddressCustomTypeAction custAct = CustomerSetAddressCustomTypeActionBuilder.of()
-                        .addressId(customer.getAddresses().get(0).getId())
-                        .type(TypeResourceIdentifierBuilder.of().key("type-customer-address").build())
-                        .fields(FieldContainerBuilder.of().addValue("floor", customerAddress.getFloor()).addValue("door", customerAddress.getDoor()).build())
-                        .build();
-                return byProjectKeyRequestBuilder.customers()
-                        .withId(customer.getId())
-                        .post(CustomerUpdateBuilder.of()
-                                .version(customer.getVersion())
-                                .actions(custAct).build())
-                        .executeBlocking().getBody();*/
             });
 
         }
