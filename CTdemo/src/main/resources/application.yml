@@ -1,7 +1,7 @@
 commercetools:
-  projectKey: practiceproject-2023
-  clientId: xUH4sYQlQmemYo6IYtdMEITh
-  clientSecret: 0aTql8m1CppFTXz1dMSKXjYkNnsFuA7o
+  projectKey: mach-project-2024
+  clientId: bqiggycWuWT8Y8QsgCvdzAvm
+  clientSecret: MvRrc9g-gL87SyNqnbiuWzM7Oo7Pq_ux
   serviceRegion: GCP_AUSTRALIA_SOUTHEAST1
 management:
   endpoints:

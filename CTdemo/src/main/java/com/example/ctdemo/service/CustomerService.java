@@ -50,12 +50,8 @@ public class CustomerService {
                         "}")
                 .variables(b -> b.addValue("customerFilter", "firstName=\"" + name + "\""))
                 .build();
-        /*CompletableFuture<GraphQLResponse> graphQLResponseCompletableFuture = byProjectKeyRequestBuilder.graphql().post(gqlRequest).execute().thenApply(ApiHttpResponse::getBody);
-        CompletableFuture<Object> objectCompletableFuture = graphQLResponseCompletableFuture.thenApply(e -> e.getData());
-        Object join = objectCompletableFuture.join();
-        return objectCompletableFuture;*/
+
         ApiHttpResponse<JsonNode> jsonNodeApiHttpResponse = byProjectKeyRequestBuilder.graphql().post(gqlRequest).executeBlocking(JsonNode.class);
-        //return jsonNodeApiHttpResponse.getBody().get("data").get("customers").get("results");
         return jsonNodeApiHttpResponse.getBody().at("/data/customers/results");
     }
 
@@ -116,5 +112,25 @@ public class CustomerService {
 
         }
         return null;
+    }
+
+    public JsonNode queryCustIdGql(String id) {
+        GraphQLRequest gqlRequest = GraphQLRequestBuilder.of()
+                .query("query ReturnASingleCustomerSearch($customerFilter: String) {\n" +
+                        "  customers(where: $customerFilter) {\n" +
+                        "    results{\n" +
+                        "      firstName\n" +
+                        "      lastName\n" +
+                        "      middleName\n" +
+                        "      email\n" +
+                        "      id\n" +
+                        "    }    \n" +
+                        "  }\n" +
+                        "}")
+                .variables(b -> b.addValue("customerFilter", "id=\"" + id + "\""))
+                .build();
+
+        ApiHttpResponse<JsonNode> jsonNodeApiHttpResponse = byProjectKeyRequestBuilder.graphql().post(gqlRequest).executeBlocking(JsonNode.class);
+        return jsonNodeApiHttpResponse.getBody().at("/data/customers/results");
     }
 }

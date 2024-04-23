@@ -25,4 +25,9 @@ public class CartsController {
     public CompletableFuture<Optional<Cart>> getCartForUser(@RequestParam String name) throws JsonProcessingException {
         return cartService.getCartForUser(name);
     }
+
+    @PostMapping("/addAnonCart")
+    public CompletableFuture<Cart> addItemToCartAnonymous(@RequestBody ItemToCart itemToCart) throws JsonProcessingException {
+        return cartService.addItemToCartAnonymous(itemToCart);
+    }
 }

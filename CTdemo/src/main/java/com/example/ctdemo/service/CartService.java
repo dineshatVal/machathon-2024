@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -39,6 +40,7 @@ public class CartService {
         CartDraft cartDraft = CartDraftBuilder.of()
                 .lineItems(lineItemDraft)
                 .currency("EUR")
+                .country("DE")
                 .customerId(id)
                 .build();
 
@@ -62,5 +64,40 @@ public class CartService {
                 .withLimit(1)
                 .execute().thenApply(ApiHttpResponse::getBody).thenApply(e -> e.getResults().stream().findFirst());
 
+    }
+
+    public CompletableFuture<Cart> addItemToCartAnonymous(ItemToCart itemToCart) {
+        UUID uuid = UUID.randomUUID();
+        LineItemDraft lineItemDraft = LineItemDraftBuilder.of()
+                .sku(itemToCart.getSku())
+                .quantity(itemToCart.getQuantity())
+                .build();
+        CartDraft cartDraft = CartDraftBuilder.of()
+                .lineItems(lineItemDraft)
+                .currency("EUR")
+                .country("DE")
+                .anonymousId(uuid.toString())
+               // .customerId(id)
+                .build();
+
+        return byProjectKeyRequestBuilder.carts()
+                .post(cartDraft)
+                .execute().thenApply(ApiHttpResponse::getBody);
+    }
+
+    public CompletableFuture<Optional<Cart>> getCartForAnonUser(String id) throws JsonProcessingException {
+        /*JsonNode jsonNode = customerService.queryCustIdGql(id);//.get("data").get("customers").get("results");
+        String ids = null;
+        if (jsonNode.size() > 0) {
+            CustomerResult customerResult = objectMapper.treeToValue(jsonNode.get(0), CustomerResult.class);
+            ids = customerResult.getId();
+        } else {
+            return CompletableFuture.completedFuture(null);
+        }*/
+        return byProjectKeyRequestBuilder.carts()
+                .get()
+                .withWhere("anonymousId = \"" + id + "\"" + "and cartState = \"" + CartState.CartStateEnum.ACTIVE + "\"")
+                .withLimit(1)
+                .execute().thenApply(ApiHttpResponse::getBody).thenApply(e -> e.getResults().stream().findFirst());
     }
 }

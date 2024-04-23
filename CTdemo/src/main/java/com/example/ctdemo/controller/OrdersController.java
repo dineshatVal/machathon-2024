@@ -35,4 +35,15 @@ public class OrdersController {
     public CompletableFuture<List<Order>> getAllOrders(@RequestParam String fname) throws JsonProcessingException {
         return orderService.getAllOrders(fname);
     }
+
+    @PostMapping("/placeorderAnon")
+    public CompletableFuture<CompletableFuture<?>> makeOrderAnonymous(@RequestParam String id) throws JsonProcessingException {
+        CompletableFuture<Optional<Cart>> cartForUser = cartService.getCartForAnonUser(id);
+        return cartForUser.thenApply(c -> {
+            if (c.isPresent()) {
+                return orderService.placeorder(c.get());
+            }
+            return CompletableFuture.completedFuture(null);
+        });
+    }
 }
