@@ -41,8 +41,4 @@ public class PaymentController {
         }).thenCompose(e -> e);
     }
 
-        /*return cartService.prepareCartForPayment(customerIdentifier, cartVersion, cod, store)
-                .thenCompose(a -> paymentService.addPayment(a, cod, a.getTaxedPrice().getTotalGross(), UUID.randomUUID().toString(), store))
-                .thenCompose(cart->orderPlacementService.placeOrder(cart,deviceType,language,null,null,null));
-    }*/
 }

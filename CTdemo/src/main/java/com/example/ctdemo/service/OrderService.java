@@ -21,10 +21,6 @@ import java.util.concurrent.CompletableFuture;
 public class OrderService {
     @Autowired
     private ByProjectKeyRequestBuilder byProjectKeyRequestBuilder;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     public CompletableFuture<Order> placeorder(Cart cart){
 
@@ -36,33 +32,8 @@ public class OrderService {
         return byProjectKeyRequestBuilder.orders()
                 .post(orderFromCartDraft)
                 .execute().thenApply(ApiHttpResponse::getBody);
-        /*return updatedCart.thenApply(f -> {
-            OrderFromCartDraft orderFromCartDraft = OrderFromCartDraftBuilder.of()
-                    .cart(CartResourceIdentifierBuilder.of().id(f.getId()).build())
-                    .version(f.getVersion())
-                    .build();
 
-            return byProjectKeyRequestBuilder.orders()
-                    .post(orderFromCartDraft)
-                    .execute().thenApply(ApiHttpResponse::getBody);
-        }).thenCompose(g -> g);*/
 
     }
 
-    public CompletableFuture<List<Order>> getAllOrders(String fname) throws JsonProcessingException {
-        JsonNode jsonNode = customerService.queryCustFNameGql(fname);
-        String id = null;
-        if(jsonNode.size()>0){
-            CustomerResult customerResult = objectMapper.treeToValue(jsonNode.get(0), CustomerResult.class);
-            id = customerResult.getId();
-        } else {
-            return null;
-        }
-
-        return byProjectKeyRequestBuilder.orders()
-                .get()
-                .withWhere("customerId = \"" + id + "\"")
-                .execute().thenApply(ApiHttpResponse::getBody).thenApply(f -> f.getResults());
-
-    }
 }
