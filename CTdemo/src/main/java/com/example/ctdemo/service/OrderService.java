@@ -1,8 +1,8 @@
 package com.example.ctdemo.service;
 
 import com.commercetools.api.client.ByProjectKeyRequestBuilder;
-import com.commercetools.api.models.cart.*;
-import com.commercetools.api.models.common.AddressBuilder;
+import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
 import com.commercetools.api.models.order.Order;
 import com.commercetools.api.models.order.OrderFromCartDraft;
 import com.commercetools.api.models.order.OrderFromCartDraftBuilder;
@@ -27,16 +27,16 @@ public class OrderService {
     private ObjectMapper objectMapper;
 
     public CompletableFuture<Order> placeorder(Cart cart){
-        CartSetShippingAddressAction cartSetShippingAddressAction = CartSetShippingAddressActionBuilder.of()
-                .address(AddressBuilder.of().country("DE").build()).build();
-        CartUpdate cartUpdate = CartUpdateBuilder.of()
-                .actions(cartSetShippingAddressAction)
-                .version(cart.getVersion()).build();
-        CompletableFuture<Cart> updatedCart = byProjectKeyRequestBuilder.carts()
-                .withId(cart.getId())
-                .post(cartUpdate).execute().thenApply(ApiHttpResponse::getBody);
 
-        return updatedCart.thenApply(f -> {
+        OrderFromCartDraft orderFromCartDraft = OrderFromCartDraftBuilder.of()
+                .cart(CartResourceIdentifierBuilder.of().id(cart.getId()).build())
+                .version(cart.getVersion())
+                .build();
+
+        return byProjectKeyRequestBuilder.orders()
+                .post(orderFromCartDraft)
+                .execute().thenApply(ApiHttpResponse::getBody);
+        /*return updatedCart.thenApply(f -> {
             OrderFromCartDraft orderFromCartDraft = OrderFromCartDraftBuilder.of()
                     .cart(CartResourceIdentifierBuilder.of().id(f.getId()).build())
                     .version(f.getVersion())
@@ -45,7 +45,7 @@ public class OrderService {
             return byProjectKeyRequestBuilder.orders()
                     .post(orderFromCartDraft)
                     .execute().thenApply(ApiHttpResponse::getBody);
-        }).thenCompose(g -> g);
+        }).thenCompose(g -> g);*/
 
     }
 
