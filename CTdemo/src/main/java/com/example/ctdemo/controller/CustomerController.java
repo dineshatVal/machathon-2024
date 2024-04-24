@@ -16,7 +16,7 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping
+    /*@GetMapping
     public CompletableFuture<Customer> queryCustomer(@RequestParam String id) {
         return customerService.query(id);
     }
@@ -34,6 +34,6 @@ public class CustomerController {
     @PostMapping("/addCustAddress")
     public CompletableFuture<Customer> addCustAddress(@RequestParam String name, @RequestBody CustomerAddress customerAddress) throws JsonProcessingException {
         return customerService.updateCustomerAddress(name, customerAddress);
-    }
+    }*/
 
 }

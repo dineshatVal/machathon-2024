@@ -20,7 +20,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    /*@GetMapping
     public Product queryProductWIthId(@RequestParam String id) {
         return productService.query(id);
     }
@@ -33,6 +33,6 @@ public class ProductController {
     @GetMapping("/graphql/sku")
     public CompletableFuture<GraphQLResponse> queryProductWithSkuGraphql(@RequestParam String sku) {
         return productService.queryWithSkuGraphql(sku);
-    }
+    }*/
 
 }

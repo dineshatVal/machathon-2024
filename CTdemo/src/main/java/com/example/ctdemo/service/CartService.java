@@ -2,6 +2,8 @@ package com.example.ctdemo.service;
 
 import com.commercetools.api.client.ByProjectKeyRequestBuilder;
 import com.commercetools.api.models.cart.*;
+import com.commercetools.api.models.payment.Payment;
+import com.commercetools.api.models.payment.PaymentResourceIdentifierBuilder;
 import com.example.ctdemo.model.cart.ItemToCart;
 import com.example.ctdemo.model.customer.CustomerResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 @Service
 public class CartService {
@@ -99,5 +102,22 @@ public class CartService {
                 .withWhere("anonymousId = \"" + id + "\"" + "and cartState = \"" + CartState.CartStateEnum.ACTIVE + "\"")
                 .withLimit(1)
                 .execute().thenApply(ApiHttpResponse::getBody).thenApply(e -> e.getResults().stream().findFirst());
+    }
+
+    public CompletableFuture<Cart> setPayment(Cart cart, Payment payment) {
+        final CartAddPaymentAction cartUpdateAction = CartAddPaymentActionBuilder.of()
+                .payment(PaymentResourceIdentifierBuilder.of()
+                        .id(payment.getId()).build())
+                .build();
+
+        CartUpdate cartUpdate = CartUpdateBuilder.of()
+                .version(cart.getVersion())
+                .actions(cartUpdateAction)
+                .build();
+
+        return byProjectKeyRequestBuilder.carts()
+                .withId(cart.getId())
+                .post(cartUpdate)
+                .execute().thenApply(ApiHttpResponse::getBody);
     }
 }
