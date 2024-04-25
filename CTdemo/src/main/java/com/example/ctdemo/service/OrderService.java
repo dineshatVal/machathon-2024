@@ -6,15 +6,10 @@ import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
 import com.commercetools.api.models.order.Order;
 import com.commercetools.api.models.order.OrderFromCartDraft;
 import com.commercetools.api.models.order.OrderFromCartDraftBuilder;
-import com.example.ctdemo.model.customer.CustomerResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service

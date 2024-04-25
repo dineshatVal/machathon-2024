@@ -5,10 +5,7 @@ import com.commercetools.api.models.cart.*;
 import com.commercetools.api.models.payment.Payment;
 import com.commercetools.api.models.payment.PaymentResourceIdentifierBuilder;
 import com.example.ctdemo.model.cart.ItemToCart;
-import com.example.ctdemo.model.customer.CustomerResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 @Service
 public class CartService {
