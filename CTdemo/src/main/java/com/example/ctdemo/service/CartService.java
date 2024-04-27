@@ -28,8 +28,8 @@ public class CartService {
                 .build();
         CartDraft cartDraft = CartDraftBuilder.of()
                 .lineItems(lineItemDraft)
-                .currency("EUR")
-                .country("DE")
+                .currency("INR")
+                .country("IN")
                 .anonymousId(uuid.toString())
                // .customerId(id)
                 .build();
